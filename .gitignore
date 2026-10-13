@@ -7,3 +7,7 @@
 rustc-ice*
 *.orig
 *.db
+
+# Lazurite additions
+target/
+Cargo.lock
