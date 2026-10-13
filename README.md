@@ -1,20 +1,43 @@
 <div align="center">
 <img width=120 height=120 src="https://lap.dev/images/floem.svg"></img>
 
+# floem-android
 
-# Floem
+A fork of [Floem](https://github.com/lapce/floem) with an Android backend.
 
-A native Rust UI library with fine-grained reactivity and great ergonomics
+> note: the discord server isn't mine
 
-[![crates.io](https://img.shields.io/crates/v/floem.svg)](https://crates.io/crates/floem)
-[![docs.rs](https://docs.rs/floem/badge.svg)](https://docs.rs/floem)
 [![Discord](https://img.shields.io/discord/946858761413328946?color=%237289DA&label=discord)](https://discord.gg/RB6cRYerXX)
+
+_floem-android is a fork. Upstream Floem lives at [lapce/floem](https://github.com/lapce/floem). This fork adds an Android backend for use by [Lazurite](https://github.com/Lazurited/lazurite)._
 
 </div>
 
-_The project is still maturing. We will make occasional breaking changes and add missing features on our way to v1._
+## About
+
+Floem is a native Rust UI library with fine-grained reactivity and great ergonomics. This fork tracks upstream Floem and adds:
+
+- Android platform support via `floem-winit-android`
+- Vulkan and GLES 3.x rendering through `wgpu`
+- Android-specific input handling (hardware keyboard, IME, trackpad)
+
+Upstream attribution is preserved. See [NOTICE](NOTICE) and [LICENSE](LICENSE).
+
+## Status
+
+Pre-alpha. The Android target does not yet compile end-to-end.
+
+| Component | Status |
+| :--- | :--- |
+| `winit-android` backend | Provided by [lapce/winit](https://github.com/lapce/winit) |
+| `rfd` (file dialogs) gated for Android | In progress |
+| `softbuffer` gated for Android | Not started |
+| `accesskit` gated for Android | Not started |
+| Full `cargo check` for `aarch64-linux-android` | Not yet |
 
 ## Quickstart
+
+The example below is from upstream Floem and works on desktop targets.
 
 ```rust
 use floem::prelude::*;
@@ -33,52 +56,57 @@ fn counter_view() -> impl IntoView {
     ))
     .style(|s| s.size_full().items_center().justify_center().gap(10))
 }
-
 ```
 
+## Upstream Features
 
-<img src="docs/img/quickstart.jpg" width="300"/>
+Inherited from Floem:
 
+- ***Cross-platform***: Windows, macOS, and Linux via [wgpu](https://github.com/gfx-rs/wgpu) with [vger](https://github.com/audulus/vger-rs), [vello](https://github.com/linebender/xilem), or [Skia](https://github.com/RazrFalcon/tiny-skia). CPU fallback via [tiny-skia](https://github.com/linebender/tiny-skia).
+- ***Fine-grained reactivity***: Reactive primitives inspired by [leptos_reactive](https://crates.io/crates/leptos_reactive).
+- ***Performance***: View tree constructed once, virtual lists available.
+- ***Flexbox & Grid layout***: Via [Taffy](https://crates.io/crates/taffy).
+- ***Customizable widgets***: Styling API with themes and classes.
+- ***Transitions and animations***: CSS-like transitions plus keyframe animations with spring easing.
+- ***Element inspector***: Browser-devtools-style diagnostic tool.
+- ***Global themes***: Light and dark built in.
+- ***Localization***: Via [Fluent](https://github.com/projectfluent/fluent-rs).
 
-## Features
+## Android Additions
 
-Inspired by [Xilem](https://github.com/linebender/xilem), [Leptos](https://github.com/leptos-rs/leptos) and [rui](https://github.com/audulus/rui), Floem aims to be a high performance declarative UI library with a highly ergonomic API.
+Added by this fork:
 
-- **Cross-platform**: Floem supports Windows, macOS and Linux with rendering using [wgpu](https://github.com/gfx-rs/wgpu) via [vger](https://github.com/audulus/vger-rs) or [vello](https://github.com/linebender/xilem), or via AnyRender's GPU-backed [Skia](https://github.com/dioxuslabs/anyrender) renderer. In case a GPU is unavailable, a CPU renderer powered by [tiny-skia](https://github.com/RazrFalcon/tiny-skia) will be used.
-- **Fine-grained reactivity**: The entire library is built around reactive primitives inspired by [leptos_reactive](https://crates.io/crates/leptos_reactive). The reactive "signals" allow you to keep your UI up-to-date with minimal effort, all while maintaining very high performance.
-- **Performance**: The view tree is constructed only once, safeguarding you from accidentally creating a bottleneck in a view generation function that slows down your entire application. Floem also provides tools to help you write efficient UI code, such as a [virtual list](https://github.com/lapce/floem/tree/main/examples/virtual_list).
-- **Flexbox & Grid layout**: Using [Taffy](https://crates.io/crates/taffy), the library provides the Flexbox and Grid layout systems, which can be applied to any View node.
-- **Customizable widgets**: Widgets are highly customizable. You can customize both the appearance and behavior of widgets using the styling API, which supports theming with classes. You can also install third-party themes.
-- **Transitions and Animations**: Floem supports both transitions and animations. Transitions, like css transitions, can animate any property that can be interpolated and can be applied alongside other styles, including in classes.
-    Floem also supports full keyframe animations that build on the ergonomics of the style system. In both transitions and animations, Floem supports easing with spring functions.
-- **Element inspector**: Inspired by your browser's developer tools, Floem provides a [diagnostic tool](docs/img/inspector.png) to debug your layout.
-- **Global themes**: Support for light and dark themes, built in design system to easly delare your own
-- **Localization**: Floem supports localizations via [Fluent](https://github.com/projectfluent/fluent-rs) crate with support for fallbacks, easy switching languages on runtime or even overriding active language for chosen part of you app
+- Android backend wired through `floem-winit-android`
+- Target-gated desktop-only crates (`rfd`, `softbuffer`, `accesskit`)
+- Android-specific `#[cfg]` branches in `src/platform/`
 
-To sample Floem's capabilities, check out the repo and run the [widget gallery](examples/widget-gallery/src/main.rs) example with cargo.
+## Community
 
+This fork does not have its own chat server or forum.
 
-<img src="docs/img/widget-gallery-dark.jpg" width="900"/>
+- Bug reports, feature requests, and patches for `floem-android` go to
+  this repo's Issues and
+  Pull Requests.
+- Upstream Floem discussion happens on the Floem Discord
+  ([invite](https://discord.gg/RB6cRYerXX), `#floem` channel). That server is
+  run by the Floem project, not by Lazurite. Use it for general Floem
+  questions, not for `floem-android` bug reports.
 
-<details>
-    <summary>Light Mode</summary>
+## Syncing Upstream
 
-<img src="docs/img/widget-gallery-light.jpg" width="900"/>
-</details>
+This fork tracks [lapce/floem](https://github.com/lapce/floem.com).
 
+```bash
+git remote add upstream https://github.com/lapce/floem.git
+git fetch upstream
+git merge upstream/master
+```
 
+## Contributing
 
+See [CONTRIBUTING.md](CONTRIBUTING.md). Android-specific patches are welcome
+via Issues and Pull Requests on this repo.
 
-<img src="docs/img/inspector.jpg" width="900"/>
+## License
 
-To help you master Floem, we provide [documentation](https://docs.rs/floem) and [code examples](examples/).
-
-## Contributions
-
-<a href="https://ws.lap.dev/#https://github.com/lapce/floem" target="_blank">
-      <img src="https://lap.dev/images/open-in-lapdev.svg?version=8" alt="Open in Lapdev">
-</a>
-
-[Lapdev](https://lap.dev/), developed by the Lapce team, is a cloud dev env service similar to GitHub Codespaces. By clicking the button above, you'll be taken to a fully set up Floem dev env where you can browse the code and start developing. All dependencies are pre-installed, so you can get straight to code.
-
-[Contributions welcome!](CONTRIBUTING.md) If you'd like to improve how Floem works and fix things, feel free to open an issue or submit a PR. If you'd like a conversation with Floem devs, you can join in the #floem channel on this [Discord](https://discord.gg/RB6cRYerXX).
+MIT, inherited from Floem. See [LICENSE](LICENSE).
