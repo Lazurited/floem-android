@@ -11,3 +11,4 @@ rustc-ice*
 # Lazurite additions
 target/
 Cargo.lock
+jniLibs/
