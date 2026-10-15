@@ -8,7 +8,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 
-use crate::platform::menu_types::MenuId;
+use crate::platform::menu_types::{Menu, MenuId};
 #[cfg(feature = "crossbeam")]
 use crossbeam::channel::{Receiver, Sender, unbounded as channel};
 use peniko::kurbo::Point;
@@ -107,7 +107,7 @@ pub enum AppEvent {
     Reopen { has_visible_windows: bool },
 }
 
-pub(crate) struct MenuWrapper(pub(crate) muda::Menu);
+pub(crate) struct MenuWrapper(pub(crate) Menu);
 // SAFETY: these unsafe wappers are needed so that we can send the muda memu.
 // The muda menu internally uses RC on a String ID and it's Vec of children.
 // This unsafe wrapper is memory safe but the race condition could potentially (unlikely)

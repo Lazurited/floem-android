@@ -38,14 +38,14 @@ use winit::{
 use super::state::WindowState;
 use super::tracking::{remove_window_id_mapping, store_window_id_mapping};
 use crate::app::{MenuWrapper, add_app_update_event};
-#[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+#[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
 use crate::platform::context_menu::context_menu_view;
-#[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+#[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
 use crate::reactive::SignalWith;
-#[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+#[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
 use crate::unit::UnitExt;
 use crate::view::{LayoutTree, VIEW_STORAGE};
-#[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+#[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
 use crate::views::{Container, Decorators, Stack};
 use crate::{
     Application,
@@ -87,7 +87,7 @@ pub(crate) struct WindowHandle {
     transparent: bool,
     pub(crate) modifiers: Modifiers,
     pub(crate) window_position: Point,
-    #[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+    #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
     pub(crate) context_menu: RwSignal<Option<(MudaMenu, Point, bool)>>,
     #[cfg(not(target_arch = "wasm32"))]
     pub(crate) window_menu_actions: HashMap<MenuId, Box<dyn Fn()>>,
@@ -135,13 +135,13 @@ impl WindowHandle {
 
         set_current_view(id);
 
-        #[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+        #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
         let context_menu = scope.create_rw_signal(None);
 
-        #[cfg(not(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32")))]
+        #[cfg(not(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_os = "ios", target_arch = "wasm32")))]
         let view = scope.enter(move || view_fn(window_id));
 
-        #[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+        #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
         let view = scope.enter(move || {
             let main_view = view_fn(window_id);
             Stack::new((
@@ -191,7 +191,7 @@ impl WindowHandle {
             profile: None,
             modifiers: Modifiers::default(),
             window_position: Point::ZERO,
-            #[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+            #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
             context_menu,
             #[cfg(not(target_arch = "wasm32"))]
             window_menu_actions: HashMap::new(),
@@ -337,7 +337,7 @@ impl WindowHandle {
             profile: None,
             modifiers: Modifiers::default(),
             window_position: Point::ZERO,
-            #[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+            #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
             context_menu: scope.create_rw_signal(None),
             #[cfg(not(target_arch = "wasm32"))]
             window_menu_actions: HashMap::new(),
@@ -392,16 +392,16 @@ impl WindowHandle {
         set_current_view(self.id.root());
 
         // Check event type for platform-specific context menu handling
-        #[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+        #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
         let is_pointer_down = matches!(&event, Event::Pointer(PointerEvent::Down { .. }));
-        #[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+        #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
         let is_pointer_up = matches!(&event, Event::Pointer(PointerEvent::Up { .. }));
 
         let root_element_id = self.window_state.root_view_id.get_element_id();
         GlobalEventCx::new(&mut self.window_state, root_element_id, event).route_window_event();
 
         // Platform-specific context menu handling
-        #[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+        #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
         {
             if is_pointer_down
                 && self.context_menu.with_untracked(|c| {
@@ -1578,7 +1578,7 @@ impl WindowHandle {
         }
     }
 
-    #[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+    #[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
     pub(crate) fn show_context_menu(&self, menu: MudaMenu, pos: Option<Point>) {
         let pos = pos.unwrap_or(self.window_state.last_pointer.0);
         let pos = Point::new(

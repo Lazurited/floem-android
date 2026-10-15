@@ -230,7 +230,7 @@ pub use floem_renderer::Svg as RendererSvg;
 pub use floem_renderer::gpu_resources::GpuResources;
 pub use imbl;
 pub use layout::ScreenLayout;
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(any(target_arch = "wasm32", target_os = "android", target_os = "ios")))]
 pub use muda;
 pub use peniko;
 pub use peniko::kurbo;

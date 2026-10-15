@@ -1,9 +1,10 @@
 //! Platform-agnostic menu types.
 //!
 //! This module provides unified menu types that work across all platforms,
-//! using muda on native platforms and wasm_stubs on wasm32.
+//! using muda on native desktop platforms and wasm_stubs on wasm32, Android,
+//! and iOS (where muda has no backend).
 
-#[cfg(not(target_arch = "wasm32"))]
+#[cfg(not(any(target_arch = "wasm32", target_os = "android", target_os = "ios")))]
 pub use muda::{
     CheckMenuItem, Icon, IconMenuItem, IsMenuItem, Menu, MenuId, MenuItem, NativeIcon,
     PredefinedMenuItem, Submenu, accelerator::Accelerator,
@@ -13,7 +14,7 @@ pub use muda::{
 #[cfg(any(target_os = "linux", target_os = "freebsd"))]
 pub use muda::MenuItemKind;
 
-#[cfg(target_arch = "wasm32")]
+#[cfg(any(target_arch = "wasm32", target_os = "android", target_os = "ios"))]
 pub use crate::platform::wasm_stubs::{
     Accelerator, CheckMenuItem, Icon, IconMenuItem, IsMenuItem, Menu, MenuId, MenuItem,
     MenuItemKind, NativeIcon, PredefinedMenuItem, Submenu,

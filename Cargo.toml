@@ -61,7 +61,6 @@ unicode-segmentation = "1.10"
 wgpu = { version = "27.0" }
 parking_lot = { version = "0.12" }
 swash = { version = "0.2" }
-muda = { version = "0.17.1", default-features = false }
 winit = { git = "https://github.com/lapce/winit", rev = "133268de675a4fda70816d78a7a1435eb972fea1", package = "floem-winit", features = ["android-native-activity"] }
 ui-events = { version = "0.3", features = ["kurbo"] }
 ui-events-winit = { path = "./ui-events-winit", package = "ui-events-floem-winit" }
@@ -77,7 +76,6 @@ rustc-hash.workspace = true
 smallvec = "1.15"
 educe = "0.6"
 taffy = { version = "0.9.2", features = ["grid"] }
-rfd = { version = "0.17.1", default-features = true}
 tokio = { version = "1", features = ["sync", "rt"], optional = true }
 raw-window-handle = { workspace = true }
 unicode-segmentation = { workspace = true }
@@ -121,10 +119,8 @@ understory_focus = { git = "https://github.com/jrmoulton/understory", rev = "2c2
 understory_virtual_list = { git = "https://github.com/jrmoulton/understory", rev = "2c2abb8c4bd9", package = "understory_virtual_list" }
 
 [target.'cfg(any(target_os = "windows", target_os = "macos"))'.dependencies]
-muda = { workspace = true }
 
 [target.'cfg(any(target_os = "linux"))'.dependencies]
-muda = { workspace = true, default-features = false, features = ["gtk"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 wasm-bindgen-futures = { version = "0.4" }
@@ -223,3 +219,7 @@ harness = false
 [[bench]]
 name = "view_creation"
 harness = false
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+rfd = { version = "0.17.1", default-features = true }
+muda = { version = "0.17.1", default-features = false }

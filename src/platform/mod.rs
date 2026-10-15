@@ -4,7 +4,7 @@
 //! features like clipboard access, native menus, and file dialogs.
 
 pub(crate) mod clipboard;
-#[cfg(any(target_os = "linux", target_os = "freebsd", target_arch = "wasm32"))]
+#[cfg(any(target_os = "linux", target_os = "freebsd", target_os = "android", target_arch = "wasm32"))]
 pub(crate) mod context_menu;
 pub mod file;
 #[cfg(not(target_arch = "wasm32"))]
@@ -12,7 +12,7 @@ pub mod file_action;
 pub mod menu;
 pub(crate) mod menu_types;
 pub(crate) mod time;
-#[cfg(target_arch = "wasm32")]
+#[cfg(any(target_arch = "wasm32", target_os = "android", target_os = "ios"))]
 pub mod wasm_stubs;
 
 pub use clipboard::{Clipboard, ClipboardError};
